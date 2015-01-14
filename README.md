@@ -1,36 +1,45 @@
 # commuter
 
-A router that does the right thing.
+A minimal, composable router with sub-routes.
 
-**Note:** Nothing is solid here; this is a work in progress.
-
-## API
+## Example
 
 ```javascript
+var commuter = require('commuter')
 
-// with a URL string
 var router = commuter()
-  , url = '/path/:title'
 
-router.add(url, onRoute)
+router.get('/post/:slug', onRoute)
 
-router('/path/some-title')
-
-function onRoute(u) {
-  console.log(this.params.title) // 'some-title'
-}
-
-// with a request object
-var router = commuter()
-  , url = '/path/:title'
-
-router.add(url, onRoute)
-
-// ... assuming req.url is '/path/some-title'
+//later, a GET request is made with the url '/post/some-title'
 router(req, res)
 
 function onRoute(req, res) {
-  console.log(this.params.title) // 'some-title'
+  console.log(req.params.title) // 'some-title'
+
+  // handle route...
+}
+```
+
+Subroutes work exactly as you'd expect:
+
+```javascript
+var commuter = require('commuter')
+
+var router = commuter()
+  , subrouter = commuter()
+
+router.get('/post*', subrouter)
+subrouter.get('/view/:title', onRoute)
+
+// later, a GET request with url '/post/view/some-title'
+router(req, res)
+
+function onRoute(req, res) {
+  console.log(req.params.title) // 'some-title' 
+  console.log(req.url) // '/post/view/some-title'
+
+  // handle route...
 }
 ```
 

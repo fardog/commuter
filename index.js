@@ -1,24 +1,36 @@
 var Routes = require('routes')
-  , url = require('url')
+  , extend = require('xtend')
 
 module.exports = createRouter
 
-function createRouter(noMatch) {
-  var router = Routes()
+function createRouter(noMatch, _verbs) {
+  var routers = {}
+    , verbs = _verbs || ['get', 'post', 'put', 'patch', 'delete']
     , routeFn
+
+  verbs.push('any')
 
   routeFn = function() {
     var args = [].slice.call(arguments)
-      , route = args[0].url || args[0]
+      , req = args[0]
+      , route = req.splats && req.splats.length ?
+          req.splats[req.splats.length - 1] :
+          req.url
+      , method = req.method ? req.method.toLowerCase() : 'any'
       , result
 
-    result = router.match(route)
+    result = routers[method].match(route)
+
+    if(!result) {
+      result = routers.any.match(route)
+    }
 
     if(result) {
-      result.fn.apply(result, args)
+      args[0] = extend(req, result)
+      result.fn.apply(null, args)
     } else {
       if(typeof noMatch === 'function') {
-        noMatch(route)
+        noMatch.apply(null, args)
 
         return
       }
@@ -27,9 +39,12 @@ function createRouter(noMatch) {
     }
   }
 
-  routeFn.add = function(pattern, handler) {
-    router.addRoute(pattern, handler)
-  }
+  verbs.forEach(function(verb) {
+    routers[verb] = Routes()
+    routeFn[verb] = function(pattern, handler) {
+      routers[verb].addRoute(pattern, handler)
+    }
+  })
 
   return routeFn
 }
