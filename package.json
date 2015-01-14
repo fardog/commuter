@@ -1,0 +1,23 @@
+{
+  "name": "commuter",
+  "version": "0.0.0",
+  "description": "Possibly a router",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fardog/commuter.git"
+  },
+  "keywords": [
+    "router",
+    "routes"
+  ],
+  "author": "Nathan Wittstock <nate@milkandtang.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fardog/commuter/issues"
+  },
+  "homepage": "https://github.com/fardog/commuter"
+}
