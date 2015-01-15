@@ -59,7 +59,7 @@ function onRoute(req, res) {
       replace the defaults, excepting the special _any_ route, which is always
       available.
 
-The **router** that is returned has the following methods:
+The `router` that is returned has the following methods:
 
 - `router(request, [args ...])` - Route a `request` through the router. Routes
   are matched in the order they were added.
@@ -77,6 +77,10 @@ The **router** that is returned has the following methods:
     should take the same form as your `router.<method>` function; that is, if
     your router was called as `router(req, res)`, your function will be called
     with `fn(req, res)`
+
+The `request` object only needs to be "request-like"; that is, the only
+properties that are used are `request.url` to match the url, and optionally
+`request.method`, which will default to the `router.any` routes if missing.
 
 As the `request` passes through the router, a few additional properties are
 added to it:
