@@ -1,7 +1,7 @@
 {
   "name": "commuter",
   "version": "0.1.0",
-  "description": "A minimal, composable router with sub-routes.",
+  "description": "A minimal, composable router that supports sub-routes.",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js"
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "router",
-    "routes"
+    "routes",
+    "http"
   ],
   "author": "Nathan Wittstock <nate@milkandtang.com>",
   "license": "MIT",

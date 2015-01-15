@@ -1,6 +1,6 @@
 # commuter
 
-A minimal, composable router with sub-routes.
+A minimal, composable router that supports sub-routes.
 
 [![Build Status](http://img.shields.io/travis/fardog/commuter/master.svg?style=flat)](https://travis-ci.org/fardog/commuter)
 [![npm install](http://img.shields.io/npm/dm/commuter.svg?style=flat)](https://www.npmjs.org/package/commuter)
