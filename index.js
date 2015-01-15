@@ -1,10 +1,11 @@
 var Routes = require('routes')
-  , extend = require('xtend')
+  , extend = require('deep-extend')
 
 module.exports = createRouter
 
-function createRouter(noMatch, _verbs) {
+function createRouter(defaultRoute, _root, _verbs) {
   var routers = {}
+    , root = _root || ''
     , verbs = _verbs || ['get', 'post', 'put', 'patch', 'delete']
     , routeFn
 
@@ -19,7 +20,13 @@ function createRouter(noMatch, _verbs) {
       , method = req.method ? req.method.toLowerCase() : 'any'
       , result
 
-    result = routers[method].match(route)
+    if (root.length && route.indexOf(root) === 0) {
+      route = route.slice(root.length, route.length)
+    }
+
+    if(routers[method]) {
+      result = routers[method].match(route)
+    }
 
     if(!result) {
       result = routers.any.match(route)
@@ -29,8 +36,8 @@ function createRouter(noMatch, _verbs) {
       args[0] = extend(req, result)
       result.fn.apply(null, args)
     } else {
-      if(typeof noMatch === 'function') {
-        noMatch.apply(null, args)
+      if(typeof defaultRoute === 'function') {
+        defaultRoute.apply(null, args)
 
         return
       }

@@ -19,18 +19,20 @@ test('routes on a request-like object', function(t) {
 })
 
 test('passes through any additional parameters provided', function(t) {
-  t.plan(1)
+  t.plan(2)
 
   var router = commuter()
     , req = {url: '/path', method: 'GET'}
     , res = {ok: function() {}}
+    , superflous = {}
 
   router.get(req.url, onRoute)
 
-  router(req, res)
+  router(req, res, superflous)
 
-  function onRoute(request, response) {
+  function onRoute(request, response, unnecessary) {
     t.strictEqual(res, response)
+    t.strictEqual(superflous, unnecessary)
 
     t.end()
   }
@@ -93,7 +95,7 @@ test('routes on expected sub-routes', function(t) {
 
   var router = commuter()
     , subRouter = commuter()
-    , req = {url:'/admin/section/home', method: 'GET'}
+    , req = {url: '/admin/section/home', method: 'GET'}
     , res = {ok: function() {}}
 
   router.get('/admin*', subRouter)
@@ -104,6 +106,99 @@ test('routes on expected sub-routes', function(t) {
   function onRoute(request, response) {
     t.equal(request.params.panel, 'home')
     t.strictEqual(response, res)
+
+    t.end()
+  }
+})
+
+test('strips root from url when provided', function(t) {
+  t.plan(1)
+
+  var router = commuter(null, '/strip')
+    , req = {url: '/strip/admin/section/home', method: 'GET'}
+
+  router.get('/admin*', onRoute)
+
+  router(req)
+
+  function onRoute(request) {
+    t.ok(request)
+
+    t.end()
+  }
+})
+
+test('root url does not affect sub-routes', function(t) {
+  t.plan(2)
+
+  var router = commuter(null, '/strip')
+    , subRouter = commuter()
+    , req = {url: '/strip/admin/section/home', method: 'GET'}
+    , res = {ok: function() {}}
+
+  router.get('/admin*', subRouter)
+  subRouter.get('/section/:panel', onRoute)
+
+  router(req, res)
+
+  function onRoute(request, response) {
+    t.equal(request.params.panel, 'home')
+    t.strictEqual(response, res)
+
+    t.end()
+  }
+})
+
+test('arbitrary verbs can be defined', function(t) {
+  t.plan(1)
+
+  var router = commuter(null, null, ['leap'])
+    , req = {url: '/path', method: 'leap'}
+
+  router.leap(req.url, onRoute)
+
+  router(req)
+
+  function onRoute() {
+    t.ok(true)
+
+    t.end()
+  }
+})
+
+test('"any" route is always present', function(t) {
+  t.plan(1)
+
+  var router = commuter(null, null, ['leap'])
+    , req = {url: '/path', method: 'wut'}
+
+  router.any(req.url, onRoute)
+
+  router(req)
+
+  function onRoute() {
+    t.ok(true)
+
+    t.end()
+  }
+})
+
+test('latest defined parameter takes precedence', function(t) {
+  t.plan(2)
+
+  var router = commuter()
+    , subRouter = commuter()
+    , req = {url: '/admin/item/go/section/home', method: 'GET'}
+    , res = {ok: function() {}}
+
+  router.get('/admin/:panel/:section/*', subRouter)
+  subRouter.get('section/:section', onRoute)
+
+  router(req, res)
+
+  function onRoute(request, response) {
+    t.equal(request.params.panel, 'item')
+    t.equal(request.params.section, 'home')
 
     t.end()
   }
