@@ -12,7 +12,7 @@ var commuter = require('commuter')
 
 var router = commuter()
 
-router.get('/post/:slug', onRoute)
+router.get('/post/:title', onRoute)
 
 //later, a GET request is made with the url '/post/some-title'
 router(req, res)
@@ -63,7 +63,7 @@ The `router` that is returned has the following methods:
 
 - `router(request, [args ...])` - Route a `request` through the router. Routes
   are matched in the order they were added.
-    - `request` - An [http.IncomingMessage][request], as called by an
+    - `request` - An [http.IncomingMessage][request], as passed by an
       [http.Server][server] or similar.
     - `args` - Any number of arguments which will be passed to the matched
       function.
