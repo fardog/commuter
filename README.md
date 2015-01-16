@@ -61,7 +61,7 @@ function onRoute(req, res) {
 
 The `router` that is returned has the following methods:
 
-- `router(request, [args ...])` - Route a `request` through the router. Routes
+- `router(request [, args ...])` - Route a `request` through the router. Routes
   are matched in the order they were added.
     - `request` - An [http.IncomingMessage][request], as passed by an
       [http.Server][server] or similar.
