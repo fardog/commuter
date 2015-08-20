@@ -2,8 +2,9 @@
 
 A minimal, composable router that supports sub-routes.
 
-[![Build Status](http://img.shields.io/travis/fardog/commuter/master.svg?style=flat)](https://travis-ci.org/fardog/commuter)
-[![npm install](http://img.shields.io/npm/dm/commuter.svg?style=flat)](https://www.npmjs.org/package/commuter)
+[![Build Status](http://img.shields.io/travis/fardog/commuter/master.svg?style=flat-square)](https://travis-ci.org/fardog/commuter)
+[![npm install](http://img.shields.io/npm/dm/commuter.svg?style=flat-square)](https://www.npmjs.org/package/commuter)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
 
 ## Example
 
@@ -30,7 +31,7 @@ Subroutes work exactly as you'd expect:
 var commuter = require('commuter')
 
 var router = commuter()
-  , subrouter = commuter()
+var subrouter = commuter()
 
 router.get('/post*', subrouter)
 subrouter.get('/view/:title', onRoute)
