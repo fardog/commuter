@@ -115,8 +115,8 @@ test('routes on expected sub-routes', function (t) {
   var req = {url: '/admin/section/home', method: 'GET'}
   var res = {ok: function () {}}
 
-  router.get('/admin*', subRouter)
-  subRouter.get('/section/:panel', onRoute)
+  router.get('/admin/*', subRouter)
+  subRouter.get('section/:panel', onRoute)
 
   router(req, res)
 
@@ -128,6 +128,47 @@ test('routes on expected sub-routes', function (t) {
   }
 })
 
+test('can place empty route in sub-route', function (t) {
+  t.plan(1)
+
+  var router = commuter()
+  var subRouter = commuter()
+  var req = {url: '/admin/', method: 'GET'}
+  var res = {ok: function () {}}
+
+  router.get('/admin/*', subRouter)
+  subRouter.get('^$', onRoute)
+
+  router(req, res)
+
+  function onRoute (request, response) {
+    t.strictEqual(response, res)
+
+    t.end()
+  }
+})
+
+test('can handle optional slashes', function (t) {
+  t.plan(4)
+
+  var router = commuter()
+  var subRouter = commuter()
+  var req1 = {url: 'admin/section/home', method: 'GET'}
+  var req2 = {url: '/admin/section/home', method: 'GET'}
+  var res = {ok: function () {}}
+
+  router.get('^/?admin/*', subRouter)
+  subRouter.get('^/?section/:panel', onRoute)
+
+  router(req1, res)
+  router(req2, res)
+
+  function onRoute (request, response) {
+    t.equal(request.params.panel, 'home')
+    t.strictEqual(response, res)
+  }
+})
+
 test('routes on expected sub-routes with query params', function (t) {
   t.plan(2)
 
@@ -136,8 +177,8 @@ test('routes on expected sub-routes with query params', function (t) {
   var req = {url: '/admin/section/home?something=true', method: 'GET'}
   var res = {ok: function () {}}
 
-  router.get('/admin*', subRouter)
-  subRouter.get('/section/:panel', onRoute)
+  router.get('/admin/*', subRouter)
+  subRouter.get('section/:panel', onRoute)
 
   router(req, res)
 
@@ -155,7 +196,7 @@ test('strips root from url when provided', function (t) {
   var router = commuter(null, '/strip')
   var req = {url: '/strip/admin/section/home', method: 'GET'}
 
-  router.get('/admin*', onRoute)
+  router.get('/admin/*', onRoute)
 
   router(req)
 
@@ -174,8 +215,8 @@ test('root url does not affect sub-routes', function (t) {
   var req = {url: '/strip/admin/section/home', method: 'GET'}
   var res = {ok: function () {}}
 
-  router.get('/admin*', subRouter)
-  subRouter.get('/section/:panel', onRoute)
+  router.get('/admin/*', subRouter)
+  subRouter.get('section/:panel', onRoute)
 
   router(req, res)
 

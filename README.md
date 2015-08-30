@@ -33,8 +33,8 @@ var commuter = require('commuter')
 var router = commuter()
 var subrouter = commuter()
 
-router.get('/post*', subrouter)
-subrouter.get('/view/:title', onRoute)
+router.get('/post/*', subrouter)
+subrouter.get('^/?view/:title', onRoute) // optionally leading slash
 
 // later, a GET request with url '/post/view/some-title'
 router(req, res)
@@ -42,6 +42,27 @@ router(req, res)
 function onRoute(req, res) {
   console.log(req.params.title) // 'some-title' 
   console.log(req.url) // '/post/view/some-title'
+
+  // handle route...
+}
+```
+
+Even handle the "index" route in your subrouter:
+
+```javascript
+var commuter = require('commuter')
+
+var router = commuter()
+var subrouter = commuter()
+
+router.get('/post/*', subrouter)
+subrouter.get('^$', onRoute) // optionally leading slash
+
+// later, a GET request with url '/post/'
+router(req, res)
+
+function onRoute(req, res) {
+  console.log(req.url) // '/post/'
 
   // handle route...
 }
