@@ -16,9 +16,9 @@ function createRouter (defaultRoute, _root, _verbs) {
   routeFn = function () {
     var args = [].slice.call(arguments)
     var req = args[0]
-    var route = req.splats && req.splats.length ?
-      req.splats[req.splats.length - 1] :
-      url.parse(req.url).pathname
+    var route = req.splats && req.splats.length
+      ? req.splats[req.splats.length - 1]
+      : url.parse(req.url).pathname
     var method = req.method ? req.method.toLowerCase() : 'any'
     var result
 
