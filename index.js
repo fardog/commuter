@@ -1,25 +1,26 @@
-var url = require('url')
+var url = require("url")
 
-var Routes = require('routes')
-var extend = require('deep-extend')
+var Routes = require("routes")
+var extend = require("deep-extend")
 
 module.exports = createRouter
 
-function createRouter (defaultRoute, _root, _verbs) {
+function createRouter(defaultRoute, _root, _verbs) {
   var routers = {}
-  var root = _root || ''
-  var verbs = _verbs || ['get', 'post', 'put', 'patch', 'delete']
+  var root = _root || ""
+  var verbs = _verbs || ["get", "post", "put", "patch", "delete"]
   var routeFn
 
-  verbs.push('any')
+  verbs.push("any")
 
   routeFn = function () {
     var args = [].slice.call(arguments)
     var req = args[0]
-    var route = req.splats && req.splats.length
-      ? req.splats[req.splats.length - 1]
-      : url.parse(req.url).pathname
-    var method = req.method ? req.method.toLowerCase() : 'any'
+    var route =
+      req.splats && req.splats.length
+        ? req.splats[req.splats.length - 1]
+        : url.parse(req.url).pathname
+    var method = req.method ? req.method.toLowerCase() : "any"
     var result
 
     if (root.length && route.indexOf(root) === 0) {
@@ -38,13 +39,13 @@ function createRouter (defaultRoute, _root, _verbs) {
       args[0] = extend(req, result)
       result.fn.apply(null, args)
     } else {
-      if (typeof defaultRoute === 'function') {
+      if (typeof defaultRoute === "function") {
         defaultRoute.apply(null, args)
 
         return
       }
 
-      throw new Error('No match for route: ' + route)
+      throw new Error("No match for route: " + route)
     }
   }
 

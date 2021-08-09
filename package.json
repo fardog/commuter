@@ -4,7 +4,8 @@
   "description": "A minimal, composable router that supports sub-routes.",
   "main": "index.js",
   "scripts": {
-    "test": "standard ./**/*.js && tape test.js"
+    "lint": "prettier --list-different **/*.js",
+    "test": "npm run lint && tape test.js"
   },
   "repository": {
     "type": "git",
@@ -22,11 +23,14 @@
   },
   "homepage": "https://github.com/fardog/commuter",
   "dependencies": {
-    "deep-extend": "^0.4.0",
+    "deep-extend": "^0.6.0",
     "routes": "^2.1.0"
   },
   "devDependencies": {
-    "standard": "^5.1.0",
-    "tape": "^4.2.0"
+    "prettier": "^2.3.2",
+    "tape": "^5.3.1"
+  },
+  "prettier": {
+    "semi": false
   }
 }
