@@ -1,6 +1,6 @@
 {
   "name": "commuter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A minimal, composable router that supports sub-routes.",
   "main": "index.js",
   "scripts": {
